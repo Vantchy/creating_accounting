@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园记账软件</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 左侧导航栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>记账本</h1>
+        <div class="subtitle">校园记账软件</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item" data-route="home">
+          <span class="nav-icon">&#9679;</span>
+          <span class="nav-text">首页</span>
+        </div>
+        <div class="nav-item" data-route="bills">
+          <span class="nav-icon">&#9776;</span>
+          <span class="nav-text">账单</span>
+        </div>
+        <div class="nav-item" data-route="dashboard">
+          <span class="nav-icon">&#9632;</span>
+          <span class="nav-text">看板</span>
+        </div>
+        <div class="nav-item" data-route="budget">
+          <span class="nav-icon">&#9644;</span>
+          <span class="nav-text">预算</span>
+        </div>
+        <div class="nav-item" data-route="accounts">
+          <span class="nav-icon">&#9670;</span>
+          <span class="nav-text">账户</span>
+        </div>
+        <div class="nav-item" data-route="profile">
+          <span class="nav-icon">&#9679;</span>
+          <span class="nav-text">我的</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- 右侧内容区 -->
+    <main class="main-content" id="page-content">
+      <!-- 页面内容由 JS 动态渲染 -->
+    </main>
+  </div>
+
+  <!-- JavaScript 文件加载 -->
+  <!-- 工具函数 -->
+  <script src="js/utils/helpers.js"></script>
+  <!-- API 封装 -->
+  <script src="js/services/api.js"></script>
+  <!-- SPA 应用主入口 -->
+  <script src="js/app.js"></script>
+  <!-- 页面模块 -->
+  <script src="js/pages/auth.js"></script>
+  <script src="js/pages/home.js"></script>
+  <script src="js/pages/bills.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+  <script src="js/pages/budget.js"></script>
+  <script src="js/pages/accounts.js"></script>
+  <script src="js/pages/profile.js"></script>
+</body>
+</html>
