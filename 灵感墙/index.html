@@ -4,19 +4,121 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>灵感卡片墙</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
   <style>
     /* ============================================
-       CSS Reset & Base
+       CSS Variables — 严格对接前端风格指南
+       ============================================ */
+    :root {
+      /* 主色 */
+      --color-primary: #000000;
+      --color-secondary: #000000;
+
+      /* 中性色 */
+      --color-text: #212121;
+      --color-text-soft: #555555;
+      --color-text-secondary: #8a8a8a;
+      --color-text-muted: #aaaaaa;
+      --color-border: #d8d8d8;
+      --color-border-soft: #e4e4e4;
+      --color-accent-gray: #d3d3d3;
+      --color-bg-page: #fafafa;
+      --color-bg: #ffffff;
+      --color-bg-soft: #f2f2f2;
+      --color-bg-overlay: #ebebeb;
+      --color-accent: #7d93a8;
+      --color-accent-soft: #edf0f4;
+
+      /* 功能色 */
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+
+      /* 字体 */
+      --font-display: "LXGW WenKai", "Noto Serif SC", "Songti SC", "STSong", SimSun, serif;
+      --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "LXGW WenKai", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-family: var(--font-serif);
+      --font-family-ui: var(--font-sans);
+
+      /* 字号 */
+      --text-xs: 0.8125rem;
+      --text-sm: 0.9375rem;
+      --text-base: 1.125rem;
+      --text-2xl: 1.375rem;
+      --text-3xl: 1.875rem;
+      --text-4xl: 2.75rem;
+
+      /* 行高 */
+      --leading-tight: 1.3;
+      --leading-normal: 1.6;
+      --leading-relaxed: 1.8;
+
+      /* 字间距 */
+      --tracking-tight: 0.01em;
+      --tracking-normal: 0.02em;
+      --tracking-wide: 0.03em;
+      --tracking-wider: 0.05em;
+
+      /* 字重 */
+      --font-normal: 400;
+      --font-medium: 500;
+      --font-semibold: 600;
+      --font-bold: 700;
+
+      /* 间距 */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      /* 圆角 */
+      --radius-sm: 0.25rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+
+      /* 阴影 */
+      --shadow-sm: 0 1px 2px rgba(33, 33, 33, 0.06);
+      --shadow-md: 0 2px 8px rgba(33, 33, 33, 0.10);
+      --shadow-lg: 0 8px 24px rgba(33, 33, 33, 0.14);
+
+      /* 缓动 */
+      --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+      --duration-fast: 150ms;
+      --duration-normal: 250ms;
+      --duration-slow: 400ms;
+
+      /* 本项目特有变量 */
+      --masonry-gap: var(--space-4);
+      --card-radius: var(--radius-lg);
+      --header-height: 60px;
+    }
+
+    /* ============================================
+       Reset & Base (风格指南 8.1)
        ============================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     html, body { height: 100%; overflow: hidden; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: #0a0a14;
-      color: #e0e0e0;
+      font-family: var(--font-family);
+      font-size: var(--text-base);
+      line-height: var(--leading-relaxed);
+      letter-spacing: var(--tracking-normal);
+      color: var(--color-text);
+      background-color: var(--color-bg-page);
       display: flex;
       flex-direction: column;
-      user-select: none;
+    }
+    button, input, select, textarea, .ui {
+      font-family: var(--font-family-ui);
     }
 
     /* ============================================
@@ -25,200 +127,254 @@
     .header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 20px 32px;
-      background: rgba(10, 10, 20, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      justify-content: center;
+      gap: var(--space-6);
+      padding: 14px 32px;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border-soft);
       z-index: 10;
       flex-shrink: 0;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      min-height: var(--header-height);
     }
     .header-logo {
-      font-size: 22px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 1px;
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--color-text);
+      letter-spacing: var(--tracking-wide);
+      white-space: nowrap;
     }
-    .header-right {
+    .header-center {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: var(--space-3);
     }
 
-    /* Search */
+    /* 线性图标通用 */
+    .icon-svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .icon-svg-lg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.6;
+    }
+
+    /* 自动滚动开关 */
+    .scroll-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border-soft);
+      background: var(--color-bg);
+      color: var(--color-text-secondary);
+      font-size: var(--text-xs);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-in-out);
+      white-space: nowrap;
+      font-family: var(--font-family-ui);
+      line-height: 1.5;
+    }
+    .scroll-toggle:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    .scroll-toggle.active {
+      background: var(--color-accent-soft);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    .scroll-toggle .toggle-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-text-muted);
+      transition: background var(--duration-fast);
+    }
+    .scroll-toggle.active .toggle-dot {
+      background: var(--color-accent);
+    }
+
+    /* Search — 风格指南 5.4 表单元素 */
     .search-wrap {
       position: relative;
     }
     .search-wrap input {
       width: 200px;
-      padding: 8px 14px 8px 36px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.06);
-      color: #e0e0e0;
-      font-size: 14px;
+      padding: 7px 12px 7px 34px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: var(--text-sm);
       outline: none;
-      transition: border-color 0.25s, background 0.25s, width 0.3s;
+      transition: border-color var(--duration-normal) var(--ease-in-out),
+                  width 0.3s var(--ease-in-out);
     }
-    .search-wrap input::placeholder { color: rgba(255, 255, 255, 0.3); }
+    .search-wrap input::placeholder { color: var(--color-text-muted); }
     .search-wrap input:focus {
-      border-color: rgba(167, 139, 250, 0.5);
-      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--color-accent);
       width: 260px;
     }
     .search-icon {
       position: absolute;
-      left: 12px;
+      left: 10px;
       top: 50%;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.3);
-      font-size: 14px;
+      color: var(--color-text-muted);
       pointer-events: none;
+      display: flex;
+      align-items: center;
     }
     .search-clear {
       display: none;
       position: absolute;
-      right: 8px;
+      right: 6px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--color-text-muted);
       cursor: pointer;
       font-size: 14px;
-      padding: 2px 4px;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      transition: color var(--duration-fast);
     }
-    .search-clear:hover { color: rgba(255, 255, 255, 0.7); }
+    .search-clear:hover { color: var(--color-text); }
     .search-wrap.has-text .search-clear { display: block; }
 
-    /* Btn */
+    /* Btn — 风格指南 5.1 */
     .btn {
-      padding: 8px 18px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.06);
-      color: #e0e0e0;
-      font-size: 14px;
+      padding: 7px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: var(--text-sm);
       cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      transition: background var(--duration-fast) var(--ease-in-out),
+                  border-color var(--duration-fast) var(--ease-in-out),
+                  transform var(--duration-fast) var(--ease-in-out);
       display: inline-flex;
       align-items: center;
       gap: 6px;
       white-space: nowrap;
+      line-height: 1.5;
     }
     .btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: var(--color-bg-soft);
+      border-color: var(--color-text-secondary);
     }
-    .btn:active { transform: scale(0.96); }
+    .btn:active { transform: scale(0.97); }
     .btn-primary {
-      background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(96, 165, 250, 0.25));
-      border-color: rgba(167, 139, 250, 0.3);
+      background: var(--color-accent-soft);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
     }
     .btn-primary:hover {
-      background: linear-gradient(135deg, rgba(167, 139, 250, 0.4), rgba(96, 165, 250, 0.4));
-      border-color: rgba(167, 139, 250, 0.5);
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #fff;
     }
     .btn-danger {
-      border-color: rgba(239, 68, 68, 0.3);
-      color: #f87171;
+      color: var(--color-error);
+      border-color: rgba(239, 68, 68, 0.25);
     }
     .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(239, 68, 68, 0.5);
+      background: rgba(239, 68, 68, 0.06);
+      border-color: var(--color-error);
     }
 
     /* ============================================
-       Conveyor Belt
+       Masonry Wall
        ============================================ */
-    .belt-wrap {
+    .wall-wrap {
       flex: 1;
       position: relative;
       overflow: hidden;
-      /* 上下留出渐变遮罩边缘 */
-      padding: 32px 0;
     }
-    /* 左右渐变遮罩 */
-    .belt-wrap::before,
-    .belt-wrap::after {
+    /* 上下渐变遮罩（淡出效果） */
+    .wall-wrap::before,
+    .wall-wrap::after {
       content: '';
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 80px;
+      left: 0;
+      right: 0;
+      height: 48px;
       z-index: 2;
       pointer-events: none;
     }
-    .belt-wrap::before {
+    .wall-wrap::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--color-bg-page) 0%, transparent 100%);
+    }
+    .wall-wrap::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--color-bg-page) 0%, transparent 100%);
+    }
+    .wall-track {
+      position: absolute;
       left: 0;
-      background: linear-gradient(to right, #0a0a14 0%, transparent 100%);
-    }
-    .belt-wrap::after {
       right: 0;
-      background: linear-gradient(to left, #0a0a14 0%, transparent 100%);
+      top: 0;
+      padding: 32px 32px 40px;
+      column-count: 5;
+      column-gap: var(--masonry-gap);
+      will-change: transform;
     }
-    .belt-track {
-      display: flex;
-      gap: 24px;
-      height: 100%;
-      padding: 0 40px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .belt-track::-webkit-scrollbar { display: none; }
+    @media (max-width: 1400px) { .wall-track { column-count: 4; } }
+    @media (max-width: 1100px) { .wall-track { column-count: 3; } }
+    @media (max-width: 800px)  { .wall-track { column-count: 2; } }
+    @media (max-width: 500px)  { .wall-track { column-count: 1; } }
 
     /* ============================================
-       Card
+       Card — 风格指南 5.2 卡片
        ============================================ */
     .card {
-      flex-shrink: 0;
-      margin: auto 0;
-      width: 280px;
-      height: 380px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      padding: 24px;
+      break-inside: avoid;
+      margin-bottom: var(--masonry-gap);
+      background: var(--color-bg);
+      border-radius: var(--card-radius);
+      border: 1px solid var(--color-border-soft);
+      box-shadow: var(--shadow-md);
+      padding: 20px 22px;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      background: inherit;
-      z-index: 0;
-      opacity: 0.6;
+      transition: transform var(--duration-normal) var(--ease-out),
+                  box-shadow var(--duration-normal) var(--ease-out),
+                  border-color var(--duration-normal) var(--ease-out);
+      animation: cardEntrance 0.5s var(--ease-out) both;
     }
     .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-border);
     }
-    .card > * { position: relative; z-index: 1; }
+
+    @keyframes cardEntrance {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     .card-title {
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      line-height: 1.4;
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: var(--font-semibold);
+      line-height: var(--leading-tight);
+      color: var(--color-text);
+      margin-bottom: 8px;
+      letter-spacing: var(--tracking-tight);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -226,31 +382,41 @@
       word-break: break-word;
     }
     .card-content {
-      flex: 1;
+      font-family: var(--font-family);
       font-size: 14px;
       line-height: 1.7;
-      color: rgba(255, 255, 255, 0.75);
+      color: var(--color-text-soft);
       display: -webkit-box;
-      -webkit-line-clamp: 6;
+      -webkit-line-clamp: 8;
       -webkit-box-orient: vertical;
       overflow: hidden;
       word-break: break-word;
     }
-    .card-source {
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-top: 12px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.4);
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      padding-top: 10px;
+      border-top: 1px solid var(--color-border-soft);
     }
-    .card-source::before { content: '— '; }
+    .card-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .card-color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border-soft);
+      flex-shrink: 0;
+    }
 
     /* 搜索高亮 */
     .highlight {
-      background: rgba(250, 204, 21, 0.35);
-      color: #fef08a;
+      background: #fef3c7;
+      color: var(--color-text);
       border-radius: 2px;
       padding: 0 2px;
     }
@@ -263,58 +429,89 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: rgba(255, 255, 255, 0.2);
-      gap: 16px;
+      color: var(--color-text-muted);
+      gap: var(--space-4);
       pointer-events: none;
+      z-index: 1;
     }
-    .empty-state .icon { font-size: 56px; opacity: 0.5; }
-    .empty-state .text { font-size: 16px; }
+    .empty-state .icon { font-size: 48px; opacity: 0.4; }
+    .empty-state .text { font-size: var(--text-sm); }
 
-    /* 底部提示 */
+    /* 底部提示条 */
     .hint-bar {
       flex-shrink: 0;
       text-align: center;
-      padding: 10px 0 16px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.2);
-      letter-spacing: 0.5px;
+      padding: 6px 0 12px;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      letter-spacing: var(--tracking-tight);
     }
 
     /* ============================================
-       Modal
+       FAB — 风格指南按钮风格
+       ============================================ */
+    .fab {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: 26px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      transition: transform var(--duration-fast) var(--ease-in-out),
+                  box-shadow var(--duration-fast) var(--ease-in-out);
+      z-index: 50;
+      font-family: var(--font-family-ui);
+    }
+    .fab:hover {
+      transform: scale(1.08);
+      box-shadow: var(--shadow-lg);
+    }
+    .fab:active { transform: scale(0.95); }
+
+    /* ============================================
+       Modal Base
        ============================================ */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 100;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      animation: fadeIn 0.2s ease;
     }
     .modal-overlay.active { display: flex; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
     .modal {
-      background: rgba(20, 20, 35, 0.95);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
+      background: var(--color-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border-soft);
+      box-shadow: var(--shadow-lg);
       width: 100%;
       max-width: 520px;
       max-height: 90vh;
       overflow-y: auto;
       padding: 28px 32px;
-      animation: slideUp 0.25s ease;
-      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+      animation: modalSlideUp 0.25s var(--ease-out);
     }
     .modal-wide { max-width: 600px; }
+    .modal-narrow { max-width: 380px; }
 
     .modal-header {
       display: flex;
@@ -323,203 +520,161 @@
       margin-bottom: 24px;
     }
     .modal-title {
+      font-family: var(--font-display);
       font-size: 18px;
-      font-weight: 600;
+      font-weight: var(--font-semibold);
+      color: var(--color-text);
+      letter-spacing: var(--tracking-tight);
     }
     .modal-close {
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.3);
-      font-size: 22px;
+      color: var(--color-text-muted);
+      font-size: 20px;
       cursor: pointer;
       padding: 4px 8px;
-      border-radius: 8px;
-      transition: background 0.2s, color 0.2s;
+      border-radius: var(--radius-md);
+      transition: background var(--duration-fast), color var(--duration-fast);
+      font-family: var(--font-family-ui);
     }
     .modal-close:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.7);
+      background: var(--color-bg-soft);
+      color: var(--color-text);
     }
 
-    /* Form */
-    .form-group { margin-bottom: 18px; }
+    /* ============================================
+       Form — 风格指南 5.4
+       ============================================ */
+    .form-group { margin-bottom: 20px; }
     .form-label {
       display: block;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
+      font-size: var(--text-sm);
+      color: var(--color-text-soft);
       margin-bottom: 6px;
-      font-weight: 500;
+      font-weight: var(--font-medium);
+      letter-spacing: var(--tracking-tight);
     }
     .form-input,
     .form-textarea {
       width: 100%;
       padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
-      color: #e0e0e0;
-      font-size: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      font-family: var(--font-family-ui);
       outline: none;
-      transition: border-color 0.25s, background 0.25s;
-      font-family: inherit;
+      transition: border-color var(--duration-normal) var(--ease-in-out);
     }
     .form-input:focus,
     .form-textarea:focus {
-      border-color: rgba(167, 139, 250, 0.5);
-      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--color-accent);
     }
     .form-textarea {
-      min-height: 100px;
+      min-height: 120px;
       resize: vertical;
+      line-height: 1.7;
+      font-family: var(--font-family);
     }
 
-    /* Color Picker */
-    .color-mode-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, 0.04);
-      border-radius: 8px;
-      padding: 3px;
+    /* ============================================
+       Color Picker — 莫兰迪色系
+       ============================================ */
+    .color-preset-label {
+      font-size: var(--text-sm);
+      color: var(--color-text-soft);
+      margin-bottom: 8px;
+      letter-spacing: var(--tracking-tight);
     }
-    .color-mode-tab {
-      flex: 1;
-      padding: 6px 0;
-      text-align: center;
-      font-size: 13px;
-      border: none;
-      background: transparent;
-      color: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-    .color-mode-tab.active {
-      background: rgba(255, 255, 255, 0.1);
-      color: #e0e0e0;
-    }
-    .color-pickers { display: flex; gap: 12px; flex-wrap: wrap; }
-    .color-picker-group { display: flex; flex-direction: column; gap: 4px; }
-    .color-picker-group label {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.35);
-    }
-    .color-picker-group input[type="color"] {
-      width: 44px;
-      height: 44px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      background: transparent;
-      cursor: pointer;
-      padding: 2px;
-    }
-    .color-picker-group input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-    .color-picker-group input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
-
-    .angle-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .angle-group input[type="range"] {
-      width: 100px;
-      accent-color: #a78bfa;
-    }
-    .angle-value {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
-      min-width: 32px;
-    }
-
-    .preset-label {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.35);
-      margin: 14px 0 8px;
-    }
-    .preset-grid {
+    .color-preset-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
-    .preset-swatch {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      border: 2px solid transparent;
+    .color-preset-swatch {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      border: 2.5px solid transparent;
       cursor: pointer;
-      transition: border-color 0.2s, transform 0.15s;
+      transition: border-color var(--duration-fast) var(--ease-in-out),
+                  transform var(--duration-fast) var(--ease-in-out);
       position: relative;
+      box-shadow: var(--shadow-sm);
     }
-    .preset-swatch:hover {
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
-    }
-    .preset-swatch.active {
-      border-color: #a78bfa;
-      box-shadow: 0 0 12px rgba(167, 139, 250, 0.4);
+    .color-preset-swatch:hover { transform: scale(1.1); z-index: 1; }
+    .color-preset-swatch.active {
+      border-color: var(--color-text);
+      box-shadow: 0 0 0 1px var(--color-bg), 0 0 0 3px var(--color-text);
     }
 
-    /* Detail Modal */
+    /* ============================================
+       Detail Modal
+       ============================================ */
     .detail-body { margin-bottom: 20px; }
     .detail-card-preview {
       width: 100%;
-      min-height: 180px;
-      border-radius: 14px;
+      min-height: 160px;
+      border-radius: var(--card-radius);
       padding: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--color-border-soft);
+      background: var(--color-bg);
+      box-shadow: var(--shadow-sm);
       margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
     }
-    .detail-card-preview::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      background: inherit;
-      z-index: 0;
-      opacity: 0.5;
-    }
-    .detail-card-preview > * { position: relative; z-index: 1; }
     .detail-card-preview .detail-preview-title {
+      font-family: var(--font-display);
       font-size: 20px;
-      font-weight: 600;
+      font-weight: var(--font-semibold);
+      color: var(--color-text);
       margin-bottom: 12px;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
     }
     .detail-card-preview .detail-preview-content {
-      font-size: 15px;
+      font-family: var(--font-family);
+      font-size: var(--text-sm);
       line-height: 1.8;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--color-text-soft);
       word-break: break-word;
+      white-space: pre-wrap;
     }
-    .detail-card-preview .detail-preview-source {
+    .detail-card-preview .detail-preview-meta {
       margin-top: 16px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.4);
+      padding-top: 12px;
+      border-top: 1px solid var(--color-border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
     }
-    .detail-card-preview .detail-preview-source::before { content: '— '; }
     .detail-actions {
       display: flex;
       gap: 10px;
       justify-content: flex-end;
     }
 
-    /* Confirm Dialog */
+    /* ============================================
+       Confirm Dialog
+       ============================================ */
     .confirm-dialog {
       text-align: center;
       padding: 8px 0;
     }
     .confirm-dialog .confirm-icon {
-      font-size: 48px;
+      font-size: 44px;
       margin-bottom: 12px;
     }
     .confirm-dialog .confirm-text {
-      font-size: 16px;
-      margin-bottom: 6px;
+      font-size: var(--text-base);
+      color: var(--color-text);
+      margin-bottom: 4px;
     }
     .confirm-dialog .confirm-sub {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.4);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
       margin-bottom: 24px;
     }
     .confirm-dialog .confirm-actions {
@@ -529,62 +684,58 @@
     }
 
     /* ============================================
+       Scrollbar (Modal & Static mode)
+       ============================================ */
+    .modal::-webkit-scrollbar { width: 4px; }
+    .modal::-webkit-scrollbar-track { background: transparent; }
+    .modal::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+
+    .wall-wrap.static-mode .wall-track {
+      position: relative;
+      padding-bottom: 80px;
+    }
+
+    /* ============================================
        Responsive
        ============================================ */
     @media (max-width: 768px) {
       .header {
-        padding: 14px 16px;
-        flex-wrap: wrap;
-        gap: 10px;
+        padding: 12px 16px;
+        gap: var(--space-3);
       }
       .header-logo { font-size: 18px; }
-      .header-right { flex: 1; justify-content: flex-end; }
+      .header-center { gap: var(--space-2); }
       .search-wrap input {
         width: 140px;
         font-size: 13px;
         padding: 6px 10px 6px 30px;
       }
       .search-wrap input:focus { width: 180px; }
-      .search-wrap input { width: 140px; }
       .btn { padding: 6px 14px; font-size: 13px; }
 
-      .belt-wrap { padding: 20px 0; }
-      .belt-wrap::before,
-      .belt-wrap::after { width: 40px; }
-      .belt-track { gap: 16px; padding: 0 20px; }
+      .wall-track { padding: 24px 16px 32px; }
+      .wall-wrap::before,
+      .wall-wrap::after { height: 32px; }
 
-      .card {
-        width: 220px;
-        height: 300px;
-        padding: 18px;
-      }
-      .card-title { font-size: 15px; }
-      .card-content { font-size: 13px; -webkit-line-clamp: 5; }
+      .card { padding: 16px 18px; }
+      .card-title { font-size: var(--text-sm); }
+      .card-content { font-size: 13px; -webkit-line-clamp: 6; }
 
-      .modal { padding: 20px; max-width: 100%; margin: 10px; border-radius: 16px; }
-      .modal-wide { max-width: 100%; }
+      .fab { bottom: 20px; right: 20px; width: 44px; height: 44px; font-size: 22px; }
 
-      .detail-card-preview { min-height: 140px; padding: 18px; }
-      .detail-card-preview .detail-preview-title { font-size: 17px; }
-      .detail-card-preview .detail-preview-content { font-size: 14px; }
+      .modal { padding: 20px; max-width: 100%; margin: 10px; border-radius: var(--radius-lg); }
     }
 
     @media (max-width: 480px) {
-      .header { flex-direction: column; align-items: stretch; }
-      .header-left { justify-content: center; }
-      .header-right { justify-content: center; flex-wrap: wrap; }
+      .header { flex-direction: column; padding: 10px; gap: 6px; }
+      .header-center { width: 100%; }
+      .search-wrap { flex: 1; }
       .search-wrap input { width: 100%; }
       .search-wrap input:focus { width: 100%; }
-      .search-wrap { flex: 1; }
-
-      .card {
-        width: 180px;
-        height: 260px;
-        padding: 14px;
-      }
-      .card-title { font-size: 14px; margin-bottom: 8px; }
-      .card-content { font-size: 12px; -webkit-line-clamp: 4; }
-      .card-source { font-size: 11px; margin-top: 8px; }
+      .wall-track { padding: 16px 12px 24px; }
+      .card { padding: 14px; }
+      .card-title { font-size: 14px; }
+      .card-content { font-size: 12px; -webkit-line-clamp: 5; }
     }
   </style>
 </head>
@@ -594,31 +745,61 @@
        Header
        ============================================ -->
   <header class="header">
-    <div class="header-left">
-      <span class="header-logo">✦ 灵感卡片墙</span>
-    </div>
-    <div class="header-right">
+    <span class="header-logo">
+      <svg class="icon-svg icon-svg-lg" viewBox="0 0 24 24" style="margin-right:4px">
+        <path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z"/>
+      </svg>
+      灵感卡片墙
+    </span>
+    <div class="header-center">
       <div class="search-wrap" id="searchWrap">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon">
+          <svg class="icon-svg" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M16.5 16.5L21 21"/>
+          </svg>
+        </span>
         <input type="text" id="searchInput" placeholder="搜索灵感…" autocomplete="off">
-        <button class="search-clear" id="searchClear" aria-label="清除搜索">✕</button>
+        <button class="search-clear" id="searchClear" aria-label="清除搜索">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
-      <button class="btn btn-primary" id="btnNewCard">+ 新建</button>
+      <button class="scroll-toggle" id="scrollToggle" title="切换自动滚动">
+        <span class="toggle-dot"></span>
+        自动滚动
+      </button>
+      <button class="btn btn-primary" id="btnNewCard">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        新建
+      </button>
     </div>
   </header>
 
   <!-- ============================================
-       Conveyor Belt
+       Masonry Wall
        ============================================ -->
-  <div class="belt-wrap" id="beltWrap">
-    <div class="belt-track" id="beltTrack"></div>
+  <div class="wall-wrap" id="wallWrap">
+    <div class="wall-track" id="wallTrack"></div>
     <div class="empty-state" id="emptyState">
-      <div class="icon">✦</div>
+      <div class="icon">
+        <svg class="icon-svg" viewBox="0 0 24 24" style="width:48px;height:48px;stroke-width:1.2">
+          <path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16l-6.4 4.8L8 14l-6-4.8h7.6z"/>
+        </svg>
+      </div>
       <div class="text">还没有灵感卡片，点击「新建」开始记录</div>
     </div>
   </div>
 
-  <div class="hint-bar">鼠标悬停暂停 · 点击查看详情</div>
+  <div class="hint-bar" id="hintBar">鼠标悬停暂停自动滚动 · 滚轮手动浏览 · 点击卡片查看详情</div>
+
+  <!-- ============================================
+       FAB
+       ============================================ -->
+  <button class="fab" id="fabBtn" title="新建灵感卡片">
+    <svg class="icon-svg" viewBox="0 0 24 24" style="width:26px;height:26px;stroke-width:2">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+  </button>
 
   <!-- ============================================
        Modal: 新建 / 编辑卡片
@@ -627,7 +808,9 @@
     <div class="modal">
       <div class="modal-header">
         <span class="modal-title" id="formModalTitle">新建灵感卡片</span>
-        <button class="modal-close" id="formModalClose">✕</button>
+        <button class="modal-close" id="formModalClose">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
       <form id="cardForm" autocomplete="off">
         <div class="form-group">
@@ -636,47 +819,12 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="formContent">正文 *</label>
-          <textarea class="form-textarea" id="formContent" placeholder="记录你的灵感…" required maxlength="2000"></textarea>
+          <textarea class="form-textarea" id="formContent" placeholder="记录你的灵感…" required maxlength="2000" rows="5"></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label" for="formSource">来源</label>
-          <input class="form-input" id="formSource" placeholder="可选，如书籍、电影、自己" maxlength="100">
-        </div>
-        <div class="form-group">
-          <label class="form-label">卡片背景色</label>
-          <div class="color-mode-tabs">
-            <button class="color-mode-tab active" data-mode="solid" type="button">纯色</button>
-            <button class="color-mode-tab" data-mode="gradient" type="button">渐变</button>
-          </div>
-          <div id="colorSolidGroup">
-            <div class="color-pickers">
-              <div class="color-picker-group">
-                <label>颜色</label>
-                <input type="color" id="colorSolid" value="#6c5ce7">
-              </div>
-            </div>
-          </div>
-          <div id="colorGradientGroup" style="display:none;">
-            <div class="color-pickers">
-              <div class="color-picker-group">
-                <label>颜色 1</label>
-                <input type="color" id="colorGrad1" value="#667eea">
-              </div>
-              <div class="color-picker-group">
-                <label>颜色 2</label>
-                <input type="color" id="colorGrad2" value="#764ba2">
-              </div>
-              <div class="color-picker-group">
-                <label>角度</label>
-                <div class="angle-group">
-                  <input type="range" id="colorAngle" min="0" max="360" value="135">
-                  <span class="angle-value" id="angleDisplay">135°</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="preset-label">预设色板</div>
-          <div class="preset-grid" id="presetGrid"></div>
+          <label class="form-label">卡片颜色</label>
+          <div class="color-preset-label">选择一种莫兰迪色</div>
+          <div class="color-preset-grid" id="colorPresetGrid"></div>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
           <button class="btn" type="button" id="formCancel">取消</button>
@@ -694,18 +842,29 @@
     <div class="modal modal-wide">
       <div class="modal-header">
         <span class="modal-title">卡片详情</span>
-        <button class="modal-close" id="detailModalClose">✕</button>
+        <button class="modal-close" id="detailModalClose">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
       <div class="detail-body" id="detailBody">
         <div class="detail-card-preview" id="detailPreview">
           <div class="detail-preview-title" id="detailTitle"></div>
           <div class="detail-preview-content" id="detailContent"></div>
-          <div class="detail-preview-source" id="detailSource"></div>
+          <div class="detail-preview-meta" id="detailMeta">
+            <span id="detailDate"></span>
+            <span id="detailColorDot"></span>
+          </div>
         </div>
       </div>
       <div class="detail-actions">
-        <button class="btn btn-danger" id="detailDelete">🗑 删除</button>
-        <button class="btn" id="detailEdit">✎ 编辑</button>
+        <button class="btn btn-danger" id="detailDelete">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+          删除
+        </button>
+        <button class="btn" id="detailEdit">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+          编辑
+        </button>
       </div>
     </div>
   </div>
@@ -714,10 +873,15 @@
        Modal: 确认删除
        ============================================ -->
   <div class="modal-overlay" id="confirmModal">
-    <div class="modal" style="max-width:380px;">
+    <div class="modal modal-narrow">
       <div class="confirm-dialog">
-        <div class="confirm-icon">⚠️</div>
-        <div class="confirm-text">确认删除这张卡片？</div>
+        <div class="confirm-icon">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="width:44px;height:44px;stroke-width:1.5;color:var(--color-warning)">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <path d="M12 9v4M12 17h.01"/>
+          </svg>
+        </div>
+        <div class="confirm-text">确定删除此灵感吗？</div>
         <div class="confirm-sub">删除后无法恢复，请谨慎操作</div>
         <div class="confirm-actions">
           <button class="btn" id="confirmCancel">取消</button>
@@ -729,16 +893,25 @@
 
   <script>
     /* ============================================
-       Config — 可扩展端口
+       配置
        ============================================ */
     const CONFIG = {
-      storageKey: 'inspiration_cards',
-      scrollSpeed: 0.8,         // 像素/帧 — 可扩展为速度调节
-      cardWidth: 280,           // 与 CSS 保持一致
-      cardGap: 24,              // 与 CSS 保持一致
-      sortOrder: 'createdAt',   // 排序字段 — 可扩展为多种排序
-      sortDir: 'desc',          // 排序方向 — 可扩展
+      storageKey: 'inspiration_cards_wall_v2',
     };
+
+    /* 莫兰迪色系预设（10种） */
+    const MORANDI_COLORS = [
+      { hex: '#F5E6D3', name: '暖米白' },
+      { hex: '#E8D5C4', name: '杏仁白' },
+      { hex: '#D4C5BC', name: '灰粉' },
+      { hex: '#C9BDB8', name: '暖灰' },
+      { hex: '#B8A99A', name: '卡其' },
+      { hex: '#A8D5BA', name: '薄荷绿' },
+      { hex: '#FCEBB5', name: '奶油黄' },
+      { hex: '#F5C6A0', name: '杏色' },
+      { hex: '#D5B8A1', name: '燕麦' },
+      { hex: '#B5B8C3', name: '雾霾蓝' },
+    ];
 
     /* ============================================
        State
@@ -747,85 +920,56 @@
     let isPaused = false;
     let isSearching = false;
     let scrollAnimId = null;
-    let scrollDirection = 1;   // 1=正向, -1=反向（往复滚动用）
     let currentDetailId = null;
     let pendingDeleteId = null;
+    let isStaticMode = false;
+    let autoScrollEnabled = true;  // 自动滚动开关
+    let wheelTimeout = null;       // 鼠标滚轮暂停恢复计时
+    let currentY = 0;              // 当前 translate Y（滚轮与动画共享）
+    let realContentHeight = 0;     // 原始内容高度（不含克隆）
+    let selectedColor = MORANDI_COLORS[0].hex;
 
     /* ============================================
        DOM refs
        ============================================ */
-    const $ = (sel) => document.querySelector(sel);
-    const $$ = (sel) => document.querySelectorAll(sel);
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => document.querySelectorAll(s);
 
-    const beltWrap = $('#beltWrap');
-    const beltTrack = $('#beltTrack');
+    const wallWrap = $('#wallWrap');
+    const wallTrack = $('#wallTrack');
     const emptyState = $('#emptyState');
+    const hintBar = $('#hintBar');
     const searchInput = $('#searchInput');
     const searchWrap = $('#searchWrap');
     const searchClear = $('#searchClear');
+    const scrollToggle = $('#scrollToggle');
     const btnNewCard = $('#btnNewCard');
+    const fabBtn = $('#fabBtn');
 
-    // Form modal
     const formModal = $('#formModal');
     const formModalTitle = $('#formModalTitle');
     const cardForm = $('#cardForm');
     const formTitle = $('#formTitle');
     const formContent = $('#formContent');
-    const formSource = $('#formSource');
     const formEditId = $('#formEditId');
     const formCancel = $('#formCancel');
     const formSubmit = $('#formSubmit');
     const formModalClose = $('#formModalClose');
+    const colorPresetGrid = $('#colorPresetGrid');
 
-    // Color
-    const colorModeTabs = $$('.color-mode-tab');
-    const colorSolidGroup = $('#colorSolidGroup');
-    const colorGradientGroup = $('#colorGradientGroup');
-    const colorSolid = $('#colorSolid');
-    const colorGrad1 = $('#colorGrad1');
-    const colorGrad2 = $('#colorGrad2');
-    const colorAngle = $('#colorAngle');
-    const angleDisplay = $('#angleDisplay');
-    const presetGrid = $('#presetGrid');
-
-    // Detail modal
     const detailModal = $('#detailModal');
     const detailModalClose = $('#detailModalClose');
     const detailPreview = $('#detailPreview');
     const detailTitle = $('#detailTitle');
     const detailContent = $('#detailContent');
-    const detailSource = $('#detailSource');
+    const detailDate = $('#detailDate');
+    const detailColorDot = $('#detailColorDot');
     const detailDelete = $('#detailDelete');
     const detailEdit = $('#detailEdit');
 
-    // Confirm modal
     const confirmModal = $('#confirmModal');
     const confirmCancel = $('#confirmCancel');
     const confirmOk = $('#confirmOk');
-
-    /* ============================================
-       Presets — 可扩展端口
-       ============================================ */
-    const PRESETS = [
-      // 纯色
-      { type: 'solid', color1: '#2d3436', label: '深灰' },
-      { type: 'solid', color1: '#6c5ce7', label: '紫' },
-      { type: 'solid', color1: '#00b894', label: '绿' },
-      { type: 'solid', color1: '#fd79a8', label: '粉' },
-      { type: 'solid', color1: '#0984e3', label: '蓝' },
-      { type: 'solid', color1: '#e17055', label: '橙' },
-      { type: 'solid', color1: '#00cec9', label: '青' },
-      { type: 'solid', color1: '#a29bfe', label: '淡紫' },
-      // 渐变
-      { type: 'gradient', color1: '#ff6b6b', color2: '#ffa500', angle: 0, label: '日落' },
-      { type: 'gradient', color1: '#2193b0', color2: '#6dd5ed', angle: 135, label: '海洋' },
-      { type: 'gradient', color1: '#667eea', color2: '#764ba2', angle: 135, label: '极光紫' },
-      { type: 'gradient', color1: '#11998e', color2: '#38ef7d', angle: 135, label: '森林' },
-      { type: 'gradient', color1: '#f093fb', color2: '#f5576c', angle: 135, label: '霓虹' },
-      { type: 'gradient', color1: '#00b4db', color2: '#0083b0', angle: 135, label: '深海' },
-      { type: 'gradient', color1: '#8E2DE2', color2: '#4A00E0', angle: 135, label: '星云' },
-      { type: 'gradient', color1: '#eb3349', color2: '#f45c43', angle: 135, label: '烈焰' },
-    ];
 
     /* ============================================
        Utils
@@ -834,18 +978,10 @@
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     }
 
-    function getBgStyle(bg) {
-      if (!bg) return 'background: rgba(255,255,255,0.05);';
-      if (bg.type === 'solid') {
-        return `background: ${bg.color1};`;
-      }
-      return `background: linear-gradient(${bg.angle}deg, ${bg.color1}, ${bg.color2});`;
-    }
-
-    function getBgCss(bg) {
-      if (!bg) return 'rgba(255,255,255,0.05)';
-      if (bg.type === 'solid') return bg.color1;
-      return `linear-gradient(${bg.angle}deg, ${bg.color1}, ${bg.color2})`;
+    function formatDate(iso) {
+      const d = new Date(iso);
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
     /* ============================================
@@ -871,12 +1007,11 @@
         id: uuid(),
         title: data.title.trim(),
         content: data.content.trim(),
-        source: data.source ? data.source.trim() : '',
-        bg: data.bg || { type: 'solid', color1: '#6c5ce7' },
+        color: data.color || MORANDI_COLORS[0].hex,
         createdAt: now,
         updatedAt: now,
       };
-      cards.unshift(card); // 最新在前
+      cards.unshift(card);
       saveCards();
       return card;
     }
@@ -888,8 +1023,7 @@
         ...cards[idx],
         title: data.title.trim(),
         content: data.content.trim(),
-        source: data.source ? data.source.trim() : '',
-        bg: data.bg || cards[idx].bg,
+        color: data.color || cards[idx].color,
         updatedAt: new Date().toISOString(),
       };
       saveCards();
@@ -916,8 +1050,8 @@
 
     function highlightText(text, keyword) {
       if (!keyword || !keyword.trim()) return escapeHtml(text);
-      const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const parts = text.split(new RegExp(`(${escapedKeyword})`, 'gi'));
+      const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
       return parts.map((part) => {
         if (part.toLowerCase() === keyword.toLowerCase()) {
           return `<span class="highlight">${escapeHtml(part)}</span>`;
@@ -926,108 +1060,160 @@
       }).join('');
     }
 
-    function createCardElement(card, keyword) {
+    function createCardElement(card, keyword, index) {
       const div = document.createElement('div');
       div.className = 'card';
       div.dataset.id = card.id;
-      div.style.cssText = getBgStyle(card.bg);
+      // 莫兰迪色作为卡片左侧装饰条
+      div.style.borderLeft = `4px solid ${card.color}`;
+      div.style.animationDelay = `${(index % 15) * 60}ms`;
 
       const kw = keyword || '';
       div.innerHTML = `
         <div class="card-title">${highlightText(card.title, kw)}</div>
         <div class="card-content">${highlightText(card.content, kw)}</div>
-        ${card.source ? `<div class="card-source">${highlightText(card.source, kw)}</div>` : ''}
+        <div class="card-footer">
+          <span class="card-date">${formatDate(card.createdAt)}</span>
+          <span class="card-color-dot" style="background:${card.color}"></span>
+        </div>
       `;
-      div.addEventListener('click', () => openDetail(card.id));
+      div.addEventListener('click', () => {
+        openDetail(card.id);
+      });
+      div.addEventListener('mouseenter', () => { isPaused = true; });
+      div.addEventListener('mouseleave', () => { isPaused = false; });
+
       return div;
     }
 
-    function render() {
+    function getFilteredCards() {
       const keyword = searchInput.value.trim();
       isSearching = !!keyword;
+      if (!isSearching) return cards;
+      const kw = keyword.toLowerCase();
+      return cards.filter((c) =>
+        c.title.toLowerCase().includes(kw) ||
+        c.content.toLowerCase().includes(kw)
+      );
+    }
 
-      let filtered = cards;
-      if (isSearching) {
-        const kw = keyword.toLowerCase();
-        filtered = cards.filter((c) =>
-          c.title.toLowerCase().includes(kw) ||
-          c.content.toLowerCase().includes(kw)
-        );
-      }
+    function render(scrollToId) {
+      stopScroll();
+      const filtered = getFilteredCards();
 
-      beltTrack.innerHTML = '';
+      wallTrack.innerHTML = '';
 
       if (filtered.length === 0) {
         emptyState.style.display = 'flex';
-        beltTrack.style.display = 'none';
+        hintBar.textContent = '还没有灵感卡片，点击「新建」开始记录';
         return;
       }
 
       emptyState.style.display = 'none';
-      beltTrack.style.display = 'flex';
+      hintBar.textContent = isSearching
+        ? `找到 ${filtered.length} 张卡片`
+        : '鼠标悬停暂停自动滚动 · 滚轮手动浏览 · 点击卡片查看详情';
 
-      // 渲染真实卡片
-      filtered.forEach((card) => {
-        beltTrack.appendChild(createCardElement(card, keyword));
+      filtered.forEach((card, i) => {
+        wallTrack.appendChild(createCardElement(card, searchInput.value.trim(), i));
       });
 
-      // 卡片 ≥ 4 张时：克隆视口可见的前几张，实现无缝循环
-      const cardCount = filtered.length;
-      const cardTotalWidth = CONFIG.cardWidth + CONFIG.cardGap;
-      const visibleCount = Math.ceil(beltWrap.clientWidth / cardTotalWidth);
-      if (cardCount >= 4) {
-        const cloneCount = Math.min(visibleCount, cardCount);
-        for (let i = 0; i < cloneCount; i++) {
-          beltTrack.appendChild(createCardElement(filtered[i], keyword));
+      requestAnimationFrame(() => {
+        decideScrollMode(filtered);
+
+        // 编辑后定位到卡片，在同一个 rAF 帧内完成，避免跳变
+        if (scrollToId) {
+          requestAnimationFrame(() => {
+            scrollToCard(scrollToId);
+          });
         }
+      });
+    }
+
+    /* ============================================
+       智能滚动决策
+       ============================================ */
+    function decideScrollMode(filtered) {
+      if (isSearching || filtered.length === 0 || !autoScrollEnabled) {
+        setStaticMode(true);
+        stopScroll();
+        return;
       }
 
-      // 搜索状态下不滚动
-      if (isSearching) {
-        beltTrack.scrollLeft = 0;
+      const totalHeight = wallTrack.scrollHeight;
+      const containerHeight = wallWrap.clientHeight;
+
+      if (totalHeight <= containerHeight) {
+        setStaticMode(true);
         stopScroll();
       } else {
-        startScroll();
+        setStaticMode(false);
+        startScroll(totalHeight, containerHeight);
+      }
+    }
+
+    function setStaticMode(enable) {
+      isStaticMode = enable;
+      wallWrap.classList.toggle('static-mode', enable);
+      if (enable) {
+        currentY = 0;
+        wallTrack.style.transform = 'translateY(0)';
+        wallTrack.style.position = 'relative';
+      } else {
+        wallTrack.style.position = 'absolute';
       }
     }
 
     /* ============================================
-       Auto Scroll — 可扩展端口
+       自动滚动 — requestAnimationFrame + translateY
        ============================================ */
-    function startScroll() {
+    function startScroll(totalHeight, containerHeight) {
       stopScroll();
-      if (isSearching) return;
-      if (cards.length === 0) return;
 
-      const cardCount = cards.length;
-      let lastTime = 0;
+      const overflowRatio = totalHeight / containerHeight;
+      const durationPerScreen = Math.max(20, 40 - (overflowRatio - 1) * 7);
+      const speed = containerHeight / (durationPerScreen * 60);
+
+      // 克隆足够填满一屏的卡片
+      const cardEls = wallTrack.querySelectorAll('.card');
+      const cardsToClone = [];
+      let accumulatedHeight = 0;
+      for (const el of cardEls) {
+        accumulatedHeight += el.offsetHeight + 16;
+        cardsToClone.push(el);
+        if (accumulatedHeight >= containerHeight + 200) break;
+      }
+
+      wallTrack.querySelectorAll('.card-clone').forEach((el) => el.remove());
+
+      cardsToClone.forEach((original) => {
+        const clone = original.cloneNode(true);
+        clone.classList.add('card-clone');
+        clone.addEventListener('click', () => {
+          const id = clone.dataset.id;
+          if (id) openDetail(id);
+        });
+        wallTrack.appendChild(clone);
+      });
+
+      realContentHeight = totalHeight;
+      currentY = 0;
+      let lastTimestamp = 0;
 
       function step(timestamp) {
-        if (!isPaused && !isSearching && cards.length > 0) {
-          // 根据帧间隔时间归一化速度，确保不同帧率下滚动匀速
-          if (lastTime === 0) lastTime = timestamp;
-          const delta = timestamp - lastTime;
-          lastTime = timestamp;
-          const speed = CONFIG.scrollSpeed * (delta / 16.67); // 归一化到 60fps
-          beltTrack.scrollLeft += speed * scrollDirection;
+        if (!isPaused && !isSearching) {
+          if (lastTimestamp === 0) lastTimestamp = timestamp;
+          const delta = timestamp - lastTimestamp;
+          lastTimestamp = timestamp;
+          const frameRatio = delta / 16.67;
+          currentY -= speed * frameRatio;
 
-          if (cardCount >= 4) {
-            // 方案一：克隆跳跃 — 到达克隆区起点时跳回
-            const cardEls = beltTrack.querySelectorAll('.card');
-            const realCards = cardCount;
-            const realWidth = cardEls[realCards - 1].offsetLeft + cardEls[realCards - 1].offsetWidth - cardEls[0].offsetLeft;
-            if (beltTrack.scrollLeft >= cardEls[0].offsetLeft + realWidth) {
-              beltTrack.scrollLeft -= realWidth;
-            }
-          } else if (cardCount >= 2) {
-            // 方案二：往复滚动 — 到终点/起点时反向
-            if (beltTrack.scrollLeft >= beltTrack.scrollWidth - beltTrack.clientWidth - 1) {
-              scrollDirection = -1;
-            } else if (beltTrack.scrollLeft <= 0) {
-              scrollDirection = 1;
-            }
+          if (Math.abs(currentY) >= realContentHeight) {
+            currentY = 0;
           }
-          // 方案三：仅 1 张卡片 → 不滚动（不做任何事）
+          wallTrack.style.transform = `translateY(${currentY}px)`;
+        } else {
+          lastTimestamp = 0;
         }
         scrollAnimId = requestAnimationFrame(step);
       }
@@ -1039,24 +1225,66 @@
         cancelAnimationFrame(scrollAnimId);
         scrollAnimId = null;
       }
+      wallTrack.querySelectorAll('.card-clone').forEach((el) => el.remove());
     }
 
-    // 鼠标/触摸暂停
-    beltWrap.addEventListener('mouseenter', () => { isPaused = true; });
-    beltWrap.addEventListener('mouseleave', () => { isPaused = false; });
+    /* ============================================
+       定位到指定卡片
+       ============================================ */
+    function scrollToCard(cardId) {
+      const cardEl = wallTrack.querySelector(`.card[data-id="${cardId}"]`);
+      if (!cardEl) return;
+      const cardTop = cardEl.offsetTop;
+      const cardHeight = cardEl.offsetHeight;
+      const containerHeight = wallWrap.clientHeight;
+      // 将卡片置于视口中间偏上位置
+      const targetY = Math.min(0, -(cardTop - containerHeight / 2 + cardHeight / 2));
+      const maxScroll = Math.max(0, wallTrack.scrollHeight - containerHeight);
+      currentY = Math.max(-maxScroll, targetY);
+      wallTrack.style.transform = `translateY(${currentY}px)`;
+    }
 
-    // 移动端触摸暂停
+    /* ============================================
+       暂停/恢复
+       ============================================ */
+    // 暂停/恢复逻辑已移至每个卡片元素的 mouseenter/mouseleave 事件上
+    // 只有鼠标真正悬停在卡片上时才暂停自动滚动
+
+    // 鼠标滚轮支持 — 自动/静态模式下均可手动滚动
+    wallWrap.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY * 0.5;
+      currentY -= delta;
+
+      if (isStaticMode) {
+        // 静态模式：正常边界，无循环
+        const maxScroll = Math.max(0, wallTrack.scrollHeight - wallWrap.clientHeight);
+        if (currentY > 0) currentY = 0;
+        if (currentY < -maxScroll) currentY = -maxScroll;
+      } else {
+        // 自动滚动模式：循环边界
+        if (currentY > 0) currentY = -realContentHeight;
+        if (currentY < -realContentHeight) currentY = 0;
+        // 暂停自动滚动，停止滚轮 2 秒后恢复
+        isPaused = true;
+        if (wheelTimeout) clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+          isPaused = false;
+          wheelTimeout = null;
+        }, 2000);
+      }
+
+      wallTrack.style.transform = `translateY(${currentY}px)`;
+    }, { passive: false });
+
     let touchCount = 0;
-    beltWrap.addEventListener('touchstart', () => {
+    wallWrap.addEventListener('touchstart', () => {
       touchCount++;
       isPaused = true;
     }, { passive: true });
-    beltWrap.addEventListener('touchend', () => {
+    wallWrap.addEventListener('touchend', () => {
       touchCount--;
-      if (touchCount <= 0) {
-        touchCount = 0;
-        isPaused = false;
-      }
+      if (touchCount <= 0) { touchCount = 0; isPaused = false; }
     }, { passive: true });
 
     /* ============================================
@@ -1079,107 +1307,31 @@
     });
 
     /* ============================================
-       Color Picker
+       颜色选择器
        ============================================ */
-    let currentColorMode = 'solid';
-
-    colorModeTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        colorModeTabs.forEach((t) => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentColorMode = tab.dataset.mode;
-        colorSolidGroup.style.display = currentColorMode === 'solid' ? 'block' : 'none';
-        colorGradientGroup.style.display = currentColorMode === 'gradient' ? 'block' : 'none';
-      });
-    });
-
-    colorAngle.addEventListener('input', () => {
-      angleDisplay.textContent = colorAngle.value + '°';
-    });
-
-    function getColorConfig() {
-      if (currentColorMode === 'solid') {
-        return { type: 'solid', color1: colorSolid.value };
-      }
-      return {
-        type: 'gradient',
-        color1: colorGrad1.value,
-        color2: colorGrad2.value,
-        angle: parseInt(colorAngle.value, 10),
-      };
-    }
-
-    function setColorConfig(bg) {
-      if (!bg) {
-        currentColorMode = 'solid';
-        colorSolid.value = '#6c5ce7';
-        colorGrad1.value = '#667eea';
-        colorGrad2.value = '#764ba2';
-        colorAngle.value = '135';
-        angleDisplay.textContent = '135°';
-      } else if (bg.type === 'solid') {
-        currentColorMode = 'solid';
-        colorSolid.value = bg.color1;
-      } else {
-        currentColorMode = 'gradient';
-        colorGrad1.value = bg.color1;
-        colorGrad2.value = bg.color2 || '#764ba2';
-        colorAngle.value = (bg.angle || 135).toString();
-        angleDisplay.textContent = colorAngle.value + '°';
-      }
-      // 更新 UI
-      colorModeTabs.forEach((t) => {
-        t.classList.toggle('active', t.dataset.mode === currentColorMode);
-      });
-      colorSolidGroup.style.display = currentColorMode === 'solid' ? 'block' : 'none';
-      colorGradientGroup.style.display = currentColorMode === 'gradient' ? 'block' : 'none';
-    }
-
-    /* ============================================
-       Presets
-       ============================================ */
-    function renderPresets() {
-      presetGrid.innerHTML = '';
-      PRESETS.forEach((p, i) => {
+    function renderColorPresets() {
+      colorPresetGrid.innerHTML = '';
+      MORANDI_COLORS.forEach((c, i) => {
         const swatch = document.createElement('div');
-        swatch.className = 'preset-swatch';
-        swatch.title = p.label;
-        if (p.type === 'solid') {
-          swatch.style.background = p.color1;
-        } else {
-          swatch.style.background = `linear-gradient(${p.angle}deg, ${p.color1}, ${p.color2})`;
-        }
-        swatch.dataset.index = i;
+        swatch.className = 'color-preset-swatch';
+        swatch.title = c.name;
+        swatch.style.background = c.hex;
+        swatch.dataset.hex = c.hex;
+        if (i === 0) swatch.classList.add('active');
         swatch.addEventListener('click', () => {
-          presetGrid.querySelectorAll('.preset-swatch').forEach((s) => s.classList.remove('active'));
+          colorPresetGrid.querySelectorAll('.color-preset-swatch').forEach((s) => s.classList.remove('active'));
           swatch.classList.add('active');
-          applyPreset(p);
+          selectedColor = c.hex;
         });
-        presetGrid.appendChild(swatch);
+        colorPresetGrid.appendChild(swatch);
       });
     }
 
-    function applyPreset(p) {
-      if (p.type === 'solid') {
-        currentColorMode = 'solid';
-        colorSolid.value = p.color1;
-        colorModeTabs.forEach((t) => {
-          t.classList.toggle('active', t.dataset.mode === 'solid');
-        });
-        colorSolidGroup.style.display = 'block';
-        colorGradientGroup.style.display = 'none';
-      } else {
-        currentColorMode = 'gradient';
-        colorGrad1.value = p.color1;
-        colorGrad2.value = p.color2;
-        colorAngle.value = (p.angle || 135).toString();
-        angleDisplay.textContent = colorAngle.value + '°';
-        colorModeTabs.forEach((t) => {
-          t.classList.toggle('active', t.dataset.mode === 'gradient');
-        });
-        colorSolidGroup.style.display = 'none';
-        colorGradientGroup.style.display = 'block';
-      }
+    function setColorPreset(hex) {
+      selectedColor = hex;
+      colorPresetGrid.querySelectorAll('.color-preset-swatch').forEach((s) => {
+        s.classList.toggle('active', s.dataset.hex === hex);
+      });
     }
 
     /* ============================================
@@ -1194,18 +1346,14 @@
         if (card) {
           formTitle.value = card.title;
           formContent.value = card.content;
-          formSource.value = card.source || '';
-          setColorConfig(card.bg);
+          setColorPreset(card.color);
         }
       } else {
         formModalTitle.textContent = '新建灵感卡片';
         formSubmit.textContent = '保存';
         formTitle.value = '';
         formContent.value = '';
-        formSource.value = '';
-        setColorConfig(null);
-        // 清除预设高亮
-        presetGrid.querySelectorAll('.preset-swatch').forEach((s) => s.classList.remove('active'));
+        setColorPreset(MORANDI_COLORS[0].hex);
       }
       formModal.classList.add('active');
       setTimeout(() => formTitle.focus(), 100);
@@ -1216,9 +1364,11 @@
     }
 
     btnNewCard.addEventListener('click', () => openFormModal());
+    fabBtn.addEventListener('click', () => openFormModal());
     formCancel.addEventListener('click', closeFormModal);
     formModalClose.addEventListener('click', closeFormModal);
-    formModal.addEventListener('click', (e) => {
+    // 用 mousedown 而非 click：避免在输入框内拖拽选文字时，松开鼠标在遮罩上导致弹窗关闭
+    formModal.addEventListener('mousedown', (e) => {
       if (e.target === formModal) closeFormModal();
     });
 
@@ -1228,17 +1378,14 @@
       const content = formContent.value.trim();
       if (!title || !content) return;
 
-      const bg = getColorConfig();
       const editId = formEditId.value;
-
       if (editId) {
-        updateCard(editId, { title, content, source: formSource.value.trim(), bg });
+        updateCard(editId, { title, content, color: selectedColor });
       } else {
-        createCard({ title, content, source: formSource.value.trim(), bg });
+        createCard({ title, content, color: selectedColor });
       }
-
       closeFormModal();
-      render();
+      render(editId || undefined);
     });
 
     /* ============================================
@@ -1250,8 +1397,15 @@
       currentDetailId = cardId;
       detailTitle.textContent = card.title;
       detailContent.textContent = card.content;
-      detailSource.textContent = card.source || '';
-      detailPreview.style.cssText = getBgStyle(card.bg);
+      detailDate.textContent = formatDate(card.createdAt);
+      detailColorDot.textContent = '';
+      detailColorDot.style.display = 'inline-block';
+      detailColorDot.style.width = '12px';
+      detailColorDot.style.height = '12px';
+      detailColorDot.style.borderRadius = '50%';
+      detailColorDot.style.background = card.color;
+      detailColorDot.style.border = '1px solid var(--color-border-soft)';
+      detailPreview.style.borderLeft = `4px solid ${card.color}`;
       detailModal.classList.add('active');
     }
 
@@ -1261,11 +1415,12 @@
     }
 
     detailModalClose.addEventListener('click', closeDetailModal);
-    detailModal.addEventListener('click', (e) => {
+    detailModal.addEventListener('mousedown', (e) => {
       if (e.target === detailModal) closeDetailModal();
     });
 
-    detailEdit.addEventListener('click', () => {
+    detailEdit.addEventListener('click', (e) => {
+      e.stopPropagation();
       const id = currentDetailId;
       if (id) {
         closeDetailModal();
@@ -1294,7 +1449,6 @@
         pendingDeleteId = null;
       }
     });
-
     confirmOk.addEventListener('click', () => {
       if (pendingDeleteId) {
         deleteCard(pendingDeleteId);
@@ -1302,6 +1456,20 @@
         confirmModal.classList.remove('active');
         render();
       }
+    });
+
+    /* ============================================
+       自动滚动开关
+       ============================================ */
+    scrollToggle.addEventListener('click', () => {
+      autoScrollEnabled = !autoScrollEnabled;
+      scrollToggle.classList.toggle('active', autoScrollEnabled);
+      if (autoScrollEnabled) {
+        scrollToggle.title = '关闭自动滚动';
+      } else {
+        scrollToggle.title = '开启自动滚动';
+      }
+      render();
     });
 
     /* ============================================
@@ -1318,7 +1486,6 @@
           closeFormModal();
         }
       }
-      // Ctrl/Cmd + K: 聚焦搜索
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         searchInput.focus();
@@ -1330,25 +1497,14 @@
        ============================================ */
     function init() {
       cards = loadCards();
-      renderPresets();
+      renderColorPresets();
+      // 初始状态：自动滚动开启
+      scrollToggle.classList.add('active');
+      scrollToggle.title = '关闭自动滚动';
       render();
     }
 
     init();
-
-    /* ============================================
-       可扩展端口注释
-       ============================================
-       [1] 排序: 修改 CONFIG.sortOrder / sortDir, 在 render()
-           中 cards 读取后加排序逻辑即可
-       [2] 标签分类: 数据模型加 tags 字段, 渲染时按标签过滤
-       [3] 导入/导出: 在 header 加按钮, 调用 JSON.stringify/parse
-       [4] 滚动速度调节: CONFIG.scrollSpeed 改为动态值,
-           可在 UI 加滑块调节
-       [5] 多列传送带: 修改 CSS .belt-track 为 grid 布局,
-           并调整滚动逻辑
-       [6] 拖拽排序: 加 drag 事件, 更新 cards 顺序后 saveCards()
-       ============================================ */
   </script>
 </body>
 </html>
