@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>树洞留言墙</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>树洞留言墙</h1>
+        </header>
+
+        <div class="composer">
+            <input type="text" id="text-input" placeholder="写点什么悄悄话..." autocomplete="off">
+            <button id="submit-btn">发布</button>
+        </div>
+
+        <div id="error-area" class="error-area"></div>
+
+        <div id="cards-grid" class="cards-grid"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
