@@ -1,0 +1,41 @@
+[
+  {
+    "id": "e2b4d411ed96",
+    "created_at": "2026-08-21T11:53:55.501280+00:00",
+    "updated_at": "2026-08-21T11:53:58.803968+00:00",
+    "completed_at": "2026-08-21T11:53:58.803941+00:00",
+    "title": "创新学院",
+    "start_time": "2026-08-15T11:53:00Z",
+    "end_time": null,
+    "location": null,
+    "description": null,
+    "priority": "medium",
+    "all_day": false
+  },
+  {
+    "id": "d10cc0390aa0",
+    "created_at": "2026-08-21T12:05:26.001024+00:00",
+    "updated_at": "2026-08-21T12:38:42.533362+00:00",
+    "completed_at": "2026-08-21T12:38:42.533346+00:00",
+    "title": "新生选课",
+    "start_time": "2026-09-03T12:04:00Z",
+    "end_time": "2026-09-03T12:04:00Z",
+    "location": "教学楼",
+    "description": "一定参加，选篮球",
+    "priority": "medium",
+    "all_day": false
+  },
+  {
+    "id": "36622c84be91",
+    "created_at": "2026-08-21T13:06:31.425226+00:00",
+    "updated_at": "2026-08-21T13:06:31.425226+00:00",
+    "completed_at": null,
+    "title": "期中考试",
+    "start_time": "2026-08-22T18:00:00Z",
+    "end_time": "2026-08-22T20:00:00Z",
+    "location": "教一1102和1602",
+    "description": "三个班共用两个考场，需对照图片确认考场，找不到请及时联系助教。",
+    "priority": "high",
+    "all_day": false
+  }
+]
